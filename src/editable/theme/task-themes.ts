@@ -53,8 +53,8 @@ const base = {
 } satisfies Omit<TaskTheme, 'kicker' | 'note'>
 
 export const taskThemes: Record<TaskKey, TaskTheme> = {
-  article: { ...base, kicker: 'Articles', note: 'In-depth reads, guides and stories worth your time.' },
-  listing: { ...base, kicker: 'Businesses', note: 'Find, compare and connect with local businesses.' },
+  article: { ...base, fontDisplay: "'Libre Caslon Text', Georgia, serif", bg: '#fffdf8', surface: '#ffffff', raised: '#f4efe5', text: '#17130f', muted: '#716960', line: '#ded7ca', accent: '#f21f2b', accentSoft: '#fff0f1', radius: '0rem', kicker: 'The reading desk', note: 'In-depth reads, guides and stories worth your time.' },
+  listing: { ...base, fontDisplay: "'Inter', system-ui, sans-serif", bg: '#f3f8f7', surface: '#ffffff', raised: '#e2efec', text: '#102a28', muted: '#617573', line: '#c9dcda', accent: '#087f74', accentSoft: '#dff5f1', onAccent: '#ffffff', radius: '1.35rem', kicker: 'Local directory', note: 'Find, compare and connect with useful businesses.' },
   classified: { ...base, kicker: 'Marketplace', note: 'Fresh offers and listings, ready to act on.' },
   image: { ...base, kicker: 'Photos', note: 'A visual feed of standout images and galleries.' },
   sbm: { ...base, kicker: 'Bookmarks', note: 'Curated resources and links worth saving.' },
