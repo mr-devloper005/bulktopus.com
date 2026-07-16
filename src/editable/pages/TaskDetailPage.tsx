@@ -123,7 +123,7 @@ export function TaskDetailView({ task, post, related, comments = [] }: { task: T
         {task === 'sbm' ? <BookmarkDetail post={post} related={related} /> : null}
         {task === 'pdf' ? <PdfDetail post={post} related={related} /> : null}
         {task === 'profile' ? <ProfileDetail post={post} related={related} /> : null}
-        {task === 'article' ? <ArticleDetail post={post} related={related} comments={comments} /> : null}
+        {task === 'article' ? <ArticleDetail post={post} comments={comments} /> : null}
       </main>
     </EditableSiteShell>
   )
@@ -190,22 +190,23 @@ function BackLink({ task }: { task: TaskKey }) {
 }
 
 // ----- Article: a quiet, centred reading column -----
-function ArticleDetail({ post, related, comments }: { post: SitePost; related: SitePost[]; comments: Array<{ id: string; name: string; comment: string; createdAt: string }> }) {
+function ArticleDetail({ post, comments }: { post: SitePost; comments: Array<{ id: string; name: string; comment: string; createdAt: string }> }) {
   const images = getImages(post)
   return (
     <>
-      <article className="mx-auto max-w-4xl px-6 py-14 sm:py-20">
-        <BackLink task="article" />
-        <p className="mt-10 text-xs font-medium uppercase tracking-[0.28em] text-[var(--tk-accent)]">{categoryOf(post, 'Article')}</p>
-        <h1 className="editable-display mt-5 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.03em] sm:text-5xl lg:text-[3.4rem]">{post.title}</h1>
-        <div className="mt-6 text-sm text-[var(--tk-muted)]">
-          <span>{SITE_CONFIG.name}</span>
+      <header className="border-b border-[var(--tk-line)] bg-[#fffdf8]">
+        <div className="mx-auto max-w-[1180px] px-6 py-12 sm:py-16">
+          <BackLink task="article" />
+          <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
+            <div><p className="text-xs font-bold uppercase tracking-[0.28em] text-[var(--tk-accent)]">{categoryOf(post, 'Article')}</p><h1 className="editable-display mt-5 text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.035em] sm:text-6xl lg:text-7xl">{post.title}</h1><p className="mt-7 border-t border-black pt-4 text-xs font-bold uppercase tracking-[.18em] text-[var(--tk-muted)]">Published by {SITE_CONFIG.name}</p></div>
+            {images[0] ? <img src={images[0]} alt="" className="aspect-[4/3] w-full object-cover shadow-[14px_14px_0_#f21f2b]" /> : <div className="aspect-[4/3] bg-[var(--tk-raised)]" />}
+          </div>
         </div>
-        {images[0] ? <img src={images[0]} alt="" className="mt-10 aspect-[16/9] w-full rounded-[var(--tk-radius)] border border-[var(--tk-line)] object-cover" /> : null}
-        <BodyContent post={post} />
-        <EditableArticleComments slug={post.slug} comments={comments} />
+      </header>
+      <article className="mx-auto grid max-w-[1180px] gap-10 px-6 py-14 lg:grid-cols-[220px_minmax(0,720px)] lg:justify-center lg:py-20">
+        <aside className="hidden border-t-4 border-black pt-4 text-sm leading-6 text-[var(--tk-muted)] lg:block"><strong className="block font-serif text-2xl text-black">In this story</strong><p className="mt-3">A focused read from the Bulktopus editorial desk.</p></aside>
+        <div><BodyContent post={post} /><EditableArticleComments slug={post.slug} comments={comments} /></div>
       </article>
-      <RelatedStrip task="article" related={related} />
     </>
   )
 }
@@ -220,20 +221,15 @@ function ListingDetail({ post, related }: { post: SitePost; related: SitePost[] 
   const website = getField(post, ['website', 'url'])
   const mapSrc = mapSrcFor(post)
   return (
-    <section className="mx-auto max-w-[var(--editable-container)] px-6 py-14 sm:py-20 lg:px-8">
-      <BackLink task="listing" />
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <>
+    <header className="bg-[#102a28] text-white [&_span]:text-white/70">
+      <div className="mx-auto max-w-[1180px] px-6 py-12 sm:py-16"><BackLink task="listing" /><div className="mt-10 flex flex-col gap-7 sm:flex-row sm:items-center"><div className="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white p-2">{logo ? <img src={logo} alt="" className="h-full w-full rounded-2xl object-cover" /> : <Building2 className="h-12 w-12 text-[#087f74]" />}</div><div><Kicker task="listing">Verified profile</Kicker><h1 className="editable-display mt-4 text-4xl font-bold leading-[1.04] tracking-[-0.03em] text-white sm:text-6xl">{post.title}</h1><DetailMeta post={post} category={getField(post, ['category'])} /></div></div></div>
+    </header>
+    <section className="mx-auto max-w-[1180px] px-6 py-14 sm:py-20 lg:px-8">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_390px]">
         <article className="min-w-0">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-            <div className="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-[var(--tk-radius)] border border-[var(--tk-line)] bg-[var(--tk-raised)]">
-              {logo ? <img src={logo} alt="" className="h-full w-full object-cover" /> : <Building2 className="h-12 w-12 text-[var(--tk-muted)]" />}
-            </div>
-            <div className="min-w-0">
-              <Kicker task="listing">Business listing</Kicker>
-              <h1 className="editable-display mt-4 text-4xl font-semibold leading-[1.04] tracking-[-0.03em] sm:text-5xl">{post.title}</h1>
-              <DetailMeta post={post} category={getField(post, ['category'])} />
-            </div>
-          </div>
+          <p className="text-xs font-bold uppercase tracking-[.24em] text-[var(--tk-accent)]">Business overview</p>
+          <h2 className="editable-display mt-3 text-3xl font-bold">What you should know</h2>
           {leadText(post) ? <p className="mt-7 max-w-2xl text-lg leading-8 text-[var(--tk-muted)]">{leadText(post)}</p> : null}
           <InfoGrid items={[['Location', address, MapPin], ['Phone', phone, Phone], ['Email', email, Mail], ['Website', website, Globe2]]} />
           <Divider />
@@ -242,11 +238,12 @@ function ListingDetail({ post, related }: { post: SitePost; related: SitePost[] 
         </article>
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           {mapSrc ? <MapBox src={mapSrc} label={address || post.title} /> : null}
-          <ContactAction website={website} phone={phone} email={email} />
           <RelatedPanel task="listing" post={post} related={related} />
         </aside>
       </div>
     </section>
+    <RelatedStrip task="listing" related={related} />
+    </>
   )
 }
 
@@ -567,4 +564,3 @@ function RelatedCard({ task, post, grid = false }: { task: TaskKey; post: SitePo
     </Link>
   )
 }
-
